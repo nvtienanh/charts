@@ -22,9 +22,9 @@ steps:
 - script: |
     df -h
     whoami
-    id -ng
+    echo $UID
+    echo $GID
     ls -la /temcache
-
     ls -la /blobfuse2
     which ccache
     echo 'Hello' > /temcache/hello.txt
