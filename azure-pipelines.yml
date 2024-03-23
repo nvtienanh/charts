@@ -33,7 +33,6 @@ steps:
     echo Add other tasks to build, test, and deploy your project.
     echo $(Agent.HomeDirectory)
     echo $(Agent.BuildDirectory)
-    cmake --build build
   displayName: 'Run a multi-line script'
 
 - task: Cache@2
@@ -45,5 +44,6 @@ steps:
       ccache | "$(Agent.OS)"
 
 - script: |
+    mkdir -p build
     cmake --build build
   displayName: 'Run cmake'
