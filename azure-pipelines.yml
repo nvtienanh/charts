@@ -12,17 +12,24 @@ pool:
 container:
   image: nvtienanh/cmake:5.0
   volumes:
-    - /temp-cache:/temp-cache:rw
+    - /temp-cache:/temp-cache
+    - /nfsdata:/nfsdata
+    - /blobfuse2:/blobfuse2
 
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
 - script: |
+    df -h
     whoami
     ls -la /temp-cache
+    ls -la /nfsdata
+    ls -la /blobfuse2
     which ccache
     echo 'Hello' > /temp-cache/hello.txt
+    echo 'Hello nfsdata' > /nfsdata/hello.txt
+    echo 'Hello blobfuse2' > /blobfuse2/hello.txt
     echo Add other tasks to build, test, and deploy your project.
     echo $(Agent.HomeDirectory)
     echo $(Agent.BuildDirectory)
