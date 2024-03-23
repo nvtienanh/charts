@@ -52,4 +52,5 @@ steps:
 
 - script: |
     azcopy --version
+  condition: always()
   displayName: 'Run cmake'
