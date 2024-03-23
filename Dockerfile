@@ -25,7 +25,7 @@ RUN apt-get install -y --no-install-recommends \
     libssl-dev && \
     apt-get clean
 
-RUN wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf azcopy_v10.tar.gz --strip-components=1 && cp ./azcopy /usr/local/bin
+RUN wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf azcopy_v10.tar.gz --strip-components=1 && cp ./azcopy /usr/local/bin &&  chmod +x /usr/local/bin/azcopy
 # Clean-up
 RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
