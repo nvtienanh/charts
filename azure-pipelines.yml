@@ -12,8 +12,8 @@ pool:
 container:
   image: nvtienanh/cmake:5.0
   volumes:
-    - /temcache:/blobfuse2
-    # - /blobfuse2:/blobfuse2
+    - /temcache:/temcache
+    - /blobfuse2:/blobfuse2
 variables:
   CCACHE_DIR: /blobfuse2
 steps:
