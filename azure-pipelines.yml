@@ -39,7 +39,7 @@ steps:
   displayName: Ccache caching
   inputs:
     key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
-    path: "/temcache"
+    path: "/blobfuse2"
     restoreKeys: | 
       ccache | "$(Agent.OS)"
 
