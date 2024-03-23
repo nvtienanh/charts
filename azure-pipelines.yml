@@ -44,6 +44,6 @@ steps:
       ccache | "$(Agent.OS)"
 
 - script: |
-    mkdir -p build
-    cmake --build build
+    cmake -B build -G Ninja
+    cmake --build .
   displayName: 'Run cmake'
