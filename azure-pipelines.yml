@@ -13,7 +13,6 @@ container:
   image: nvtienanh/cmake:5.0
   volumes:
     - /temcache:/temcache:rw
-    - /nfsdata:/nfsdata
     - /blobfuse2:/blobfuse2
 
 steps:
@@ -23,12 +22,12 @@ steps:
 - script: |
     df -h
     whoami
+    id -ng
     ls -la /temcache
-    ls -la /nfsdata
+
     ls -la /blobfuse2
     which ccache
     echo 'Hello' > /temcache/hello.txt
-    echo 'Hello nfsdata' > /nfsdata/hello.txt
     echo 'Hello blobfuse2' > /blobfuse2/hello.txt
     echo Add other tasks to build, test, and deploy your project.
     echo $(Agent.HomeDirectory)
