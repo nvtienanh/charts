@@ -23,7 +23,6 @@ steps:
     which cmake
     ls -la /temp-cache
     echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
     echo $(Agent.HomeDirectory)
     echo $(Agent.BuildDirectory)
   displayName: 'Run a multi-line script'
