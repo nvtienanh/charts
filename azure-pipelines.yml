@@ -21,6 +21,7 @@ steps:
 - script: |
     whoami
     ls -la /temp-cache
+    which ccache
     echo 'Hello' > /temp-cache/hello.txt
     echo Add other tasks to build, test, and deploy your project.
     echo $(Agent.HomeDirectory)
