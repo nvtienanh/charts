@@ -16,6 +16,7 @@ container:
     - /blobfuse2:/blobfuse2
 variables:
   CCACHE_DIR: /temcache
+
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
@@ -34,7 +35,6 @@ steps:
     echo $(Agent.HomeDirectory)
     echo $(Agent.BuildDirectory)
     echo $(System.DefaultWorkingDirectory)
-    azcopy --version
   displayName: 'Run a multi-line script'
 
 - task: Cache@2
@@ -48,4 +48,8 @@ steps:
 - script: |
     cmake -B build -G Ninja
     cmake --build ./build
+  displayName: 'Run cmake'
+
+- script: |
+    azcopy --version
   displayName: 'Run cmake'
