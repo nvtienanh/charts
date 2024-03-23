@@ -15,7 +15,7 @@ container:
     - /temcache:/temcache
     - /blobfuse2:/blobfuse2
 variables:
-  CCACHE_DIR: /blobfuse2
+  CCACHE_DIR: /temcache
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
