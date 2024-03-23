@@ -45,5 +45,5 @@ steps:
 
 - script: |
     cmake -B build -G Ninja
-    cmake --build .
+    cmake --build ./build
   displayName: 'Run cmake'
