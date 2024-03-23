@@ -13,7 +13,7 @@ container:
   image: nvtienanh/cmake:5.0
   volumes:
     - /temcache:/temcache:rw
-    - /blobfuse2:/blobfuse2
+    # - /blobfuse2:/blobfuse2
 
 steps:
 - script: echo Hello, world!
@@ -28,10 +28,11 @@ steps:
     ls -la /blobfuse2
     which ccache
     echo 'Hello' > /temcache/hello.txt
-    echo 'Hello blobfuse2' > /blobfuse2/hello.txt
+
     echo Add other tasks to build, test, and deploy your project.
     echo $(Agent.HomeDirectory)
     echo $(Agent.BuildDirectory)
+    echo $(System.DefaultWorkingDirectory)
   displayName: 'Run a multi-line script'
 
 - task: Cache@2
