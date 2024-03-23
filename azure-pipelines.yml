@@ -19,9 +19,9 @@ steps:
   displayName: 'Run a one-line script'
 
 - script: |
-    df -h
-    which cmake
+    whoami
     ls -la /temp-cache
+    echo 'Hello' > hello.txt
     echo Add other tasks to build, test, and deploy your project.
     echo $(Agent.HomeDirectory)
     echo $(Agent.BuildDirectory)
