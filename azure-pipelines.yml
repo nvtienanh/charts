@@ -10,7 +10,7 @@ pool:
   name: test
 
 container:
-  image: nvtienanh/cmake:5.0
+  image: nvtienanh/cmake:5.1
   volumes:
     - /temcache:/temcache
     - /blobfuse2:/blobfuse2
