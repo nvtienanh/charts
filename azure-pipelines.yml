@@ -12,9 +12,10 @@ pool:
 container:
   image: nvtienanh/cmake:5.0
   volumes:
-    - /temcache:/temcache:rw
+    - /temcache:/temcache
     # - /blobfuse2:/blobfuse2
-
+variables:
+  CCACHE_DIR: /temcache
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
@@ -39,7 +40,7 @@ steps:
   displayName: Ccache caching
   inputs:
     key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
-    path: "/blobfuse2"
+    path: $(CCACHE_DIR)
     restoreKeys: | 
       ccache | "$(Agent.OS)"
 
