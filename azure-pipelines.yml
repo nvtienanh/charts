@@ -9,11 +9,19 @@ trigger:
 pool:
   name: test
 
+container:
+  image: danger89/cmake:5.0
+  volumes:
+    - /temp-cache:/temp-cache:rw
+
 steps:
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
 
 - script: |
+    df -h
+    which cmake
+    ls -la /temp-cache
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
     echo $(Agent.HomeDirectory)
