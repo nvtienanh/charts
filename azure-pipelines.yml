@@ -10,7 +10,7 @@ pool:
   name: test
 
 container:
-  image: danger89/cmake:5.0
+  image: nvtienanh/cmake:5.0
   volumes:
     - /temp-cache:/temp-cache:rw
 
