@@ -7,50 +7,49 @@ trigger:
 - main
 
 pool:
-  name: test
+    name: test
+jobs:
+- job: no_checkout
+  
+  container:
+    image: nvtienanh/cmake:5.0
+    volumes:
+      - /temcache:/temcache
+      - /blobfuse2:/blobfuse2
+  variables:
+    CCACHE_DIR: /temcache
+  steps:
+  - script: |
+      ls -la /temcache
+  - task: Cache@2
+    displayName: Ccache caching
+    inputs:
+      key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
+      path: $(CCACHE_DIR)
+      restoreKeys: | 
+        ccache | "$(Agent.OS)"
 
-container:
-  image: nvtienanh/cmake:5.0
-  volumes:
-    - /temcache:/temcache
-    - /blobfuse2:/blobfuse2
-variables:
-  CCACHE_DIR: /temcache
+  - script: |
+      cmake -B build -G Ninja
+      cmake --build ./build
+    displayName: 'Run cmake'
+  - script: |
+      ls -la /temcache
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
 
-- script: |
-    df -h
-    whoami
-    echo $UID
-    echo $GID
-    ls -la /temcache
-    ls -la /blobfuse2
-    which ccache
-    echo 'Hello' > /temcache/hello.txt
+- job: checkout
 
-    echo Add other tasks to build, test, and deploy your project.
-    echo $(Agent.HomeDirectory)
-    echo $(Agent.BuildDirectory)
-    echo $(System.DefaultWorkingDirectory)
-  displayName: 'Run a multi-line script'
-
-- task: Cache@2
-  displayName: Ccache caching
-  inputs:
-    key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
-    path: $(CCACHE_DIR)
-    restoreKeys: | 
-      ccache | "$(Agent.OS)"
-
-- script: |
-    cmake -B build -G Ninja
-    cmake --build ./build
-  displayName: 'Run cmake'
-
-- script: |
-    azcopy --version
+  container:
+    image: nvtienanh/cmake:5.0
+    volumes:
+      - /temcache:/temcache
+      - /blobfuse2:/blobfuse2
+  steps:
+  - checkout: none
+  - script: |
+      ls -la /temcache
+      azcopy --version
   condition: always()
   displayName: 'Run cmake'
+
+
