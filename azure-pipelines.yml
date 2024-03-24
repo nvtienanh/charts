@@ -38,6 +38,7 @@ jobs:
 
 
 - job: checkout
+  dependsOn: no_checkout
 
   container:
     image: nvtienanh/cmake:5.0
