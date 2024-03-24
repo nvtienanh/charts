@@ -16,11 +16,12 @@ jobs:
     volumes:
       - /temcache:/temcache
       - /blobfuse2:/blobfuse2
+      - /nfsdata:/nfsdata
   variables:
-    CCACHE_DIR: /temcache
+    CCACHE_DIR: /nfsdata
   steps:
   - script: |
-      ls -la /temcache
+      ls -la /nfsdata
   - task: Cache@2
     displayName: Ccache caching
     inputs:
@@ -34,23 +35,23 @@ jobs:
       cmake --build ./build
     displayName: 'Run cmake'
   - script: |
-      ls -la /temcache
+      ls -la /nfsdata
 
 
-- job: checkout
-  dependsOn: no_checkout
+# - job: checkout
+#   dependsOn: no_checkout
 
-  container:
-    image: nvtienanh/cmake:5.0
-    volumes:
-      - /temcache:/temcache
-      - /blobfuse2:/blobfuse2
-  steps:
-  - checkout: none
-  - script: |
-      ls -la /temcache
-      azcopy --version
-  condition: always()
-  displayName: 'Run cmake'
+#   container:
+#     image: nvtienanh/cmake:5.0
+#     volumes:
+#       - /temcache:/temcache
+#       - /blobfuse2:/blobfuse2
+#   steps:
+#   - checkout: none
+#   - script: |
+#       ls -la /temcache
+#       azcopy --version
+#   condition: always()
+#   displayName: 'Run cmake'
 
 
