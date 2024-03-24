@@ -18,10 +18,10 @@ jobs:
       - /blobfuse2:/blobfuse2
       - /nfsdata:/nfsdata
   variables:
-    CCACHE_DIR: /nfsdata
+    CCACHE_DIR: /blobfuse2
   steps:
   - script: |
-      ls -la /nfsdata
+      ls -la /blobfuse2
   - task: Cache@2
     displayName: Ccache caching
     inputs:
@@ -35,7 +35,7 @@ jobs:
       cmake --build ./build
     displayName: 'Run cmake'
   - script: |
-      ls -la /nfsdata
+      ls -la /blobfuse2
 
 
 # - job: checkout
