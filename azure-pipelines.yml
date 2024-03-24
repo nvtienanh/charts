@@ -15,13 +15,13 @@ jobs:
     image: nvtienanh/cmake:5.0
     volumes:
       - /temcache:/temcache
-      - /blobfuse2:/blobfuse2
+      - /sofacache:/sofacache
       - /nfsdata:/nfsdata
   variables:
-    CCACHE_DIR: /blobfuse2
+    CCACHE_DIR: /sofacache
   steps:
   - script: |
-      ls -la /blobfuse2
+      ls -la /sofacache
   - task: Cache@2
     displayName: Ccache caching
     inputs:
@@ -35,7 +35,7 @@ jobs:
       cmake --build ./build
     displayName: 'Run cmake'
   - script: |
-      ls -la /blobfuse2
+      ls -la /sofacache
 
 
 # - job: checkout
