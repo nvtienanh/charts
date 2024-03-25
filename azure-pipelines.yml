@@ -32,8 +32,10 @@ jobs:
   - script: |
       conan profile detect
       conan install . --output-folder=build --build=missing
+      conan lock create conanfile.py
+      ls
       # cmake -B build -G Ninja
-      cmake -B build -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+      cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
       cmake --build ./build
     displayName: 'Run cmake'
 
