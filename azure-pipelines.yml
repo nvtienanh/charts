@@ -19,17 +19,17 @@ jobs:
   variables:
     CCACHE_DIR: /nfsdata
     CONAN_USER_HOME: /conan
-    CCACHE_HARDLINK: true
+    # CCACHE_HARDLINK: true
   steps:
-  - task: Cache@2
-    displayName: Conan caching
-    inputs:
-      key: 'conan | "$(Agent.OS)" | **/conanfile.py'
-      path: $(CONAN_USER_HOME)
-      restoreKeys: | 
-        conan | "$(Agent.OS)"
-        conan
-      cacheHitVar: CONAN_CACHE_RESTORED
+  # - task: Cache@2
+  #   displayName: Conan caching
+  #   inputs:
+  #     key: 'conan | "$(Agent.OS)" | **/conanfile.py'
+  #     path: $(CONAN_USER_HOME)
+  #     restoreKeys: | 
+  #       conan | "$(Agent.OS)"
+  #       conan
+  #     cacheHitVar: CONAN_CACHE_RESTORED
 
   - task: Cache@2
     displayName: Ccache caching
@@ -41,15 +41,15 @@ jobs:
       cacheHitVar: CCACHE_RESTORED
 
   - script: |
-      gcc -
-      conan profile detect
-      # conan profile update settings.compiler.libcxx=libstdc++11 default
-      # conan profile update settings.compiler.cppstd=gnu17 default      
-      conan install . --output-folder=build --build=missing
-      
-      # cmake -B build -G Ninja
-      cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      cmake -B build -G Ninja
       cmake --build ./build
+      # conan profile detect     
+      # conan install . --output-folder=build --build=missing
+      
+      # # cmake -B build -G Ninja
+      # cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+      # cmake --build ./build
     displayName: 'Run cmake'
 
 
