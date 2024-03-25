@@ -42,12 +42,12 @@ jobs:
   - script: |
       gcc -
       conan profile detect
-      conan profile update settings.compiler.libcxx=libstdc++11 default
-      conan profile update settings.compiler.cppstd=gnu17 default      
+      # conan profile update settings.compiler.libcxx=libstdc++11 default
+      # conan profile update settings.compiler.cppstd=gnu17 default      
       conan install . --output-folder=build --build=missing
       
       # cmake -B build -G Ninja
-      cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+      cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
       cmake --build ./build
     displayName: 'Run cmake'
 
