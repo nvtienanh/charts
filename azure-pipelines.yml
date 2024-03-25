@@ -40,7 +40,8 @@ jobs:
       cacheHitVar: CCACHE_RESTORED
 
   - script: |
-      conan profile detect
+      conan profile new default --detect
+      conan profile update settings.compiler.libcxx=libstdc++11 default
       conan install . --output-folder=build --build=missing
       conan lock create conanfile.py
       # cmake -B build -G Ninja
