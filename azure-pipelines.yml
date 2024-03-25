@@ -14,10 +14,10 @@ jobs:
   container:
     image: nvtienanh/cmake:5.0
     volumes:
-      - /sofacache:/sofacache
+      - /nfsdata:/nfsdata
       - /conan:/conan
   variables:
-    CCACHE_DIR: /sofacache
+    CCACHE_DIR: /nfsdata
     CONAN_USER_HOME: /conan
   steps:
   - task: Cache@2
