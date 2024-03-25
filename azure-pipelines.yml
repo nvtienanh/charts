@@ -29,6 +29,7 @@ jobs:
       path: $(CCACHE_DIR)
       restoreKeys: | 
         ccache | "$(Agent.OS)"
+      cacheHitVar: CACHE_RESTORED
 
   - script: |
       cmake -B build -G Ninja
