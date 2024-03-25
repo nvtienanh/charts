@@ -19,6 +19,7 @@ jobs:
   variables:
     CCACHE_DIR: /nfsdata
     CONAN_USER_HOME: /conan
+
     # CCACHE_HARDLINK: true
   steps:
   # - task: Cache@2
@@ -42,6 +43,7 @@ jobs:
 
   - script: |
 
+      export CCACHE_NOHARDLINK=true
       cmake -B build -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
       cmake --build ./build
       # conan profile detect     
