@@ -19,6 +19,7 @@ jobs:
   variables:
     CCACHE_DIR: /nfsdata
     CONAN_USER_HOME: /conan
+    CCACHE_HARDLINK: true
   steps:
   - task: Cache@2
     displayName: Conan caching
