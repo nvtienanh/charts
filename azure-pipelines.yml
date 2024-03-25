@@ -22,38 +22,38 @@ jobs:
 
     # CCACHE_HARDLINK: true
   steps:
-  # - task: Cache@2
-  #   displayName: Conan caching
-  #   inputs:
-  #     key: 'conan | "$(Agent.OS)" | **/conanfile.py'
-  #     path: $(CONAN_USER_HOME)
-  #     restoreKeys: | 
-  #       conan | "$(Agent.OS)"
-  #       conan
-  #     cacheHitVar: CONAN_CACHE_RESTORED
-
   - task: Cache@2
-    displayName: Ccache caching
+    displayName: Conan caching
     inputs:
-      key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
-      path: /nfsdata
+      key: 'conan | "$(Agent.OS)" | **/conanfile.py'
+      path: $(CONAN_USER_HOME)
       restoreKeys: | 
-        ccache | "$(Agent.OS)"
-      cacheHitVar: CCACHE_RESTORED
+        conan | "$(Agent.OS)"
+        conan
+      cacheHitVar: CONAN_CACHE_RESTORED
+
+  # - task: Cache@2
+  #   displayName: Ccache caching
+  #   inputs:
+  #     key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
+  #     path: /nfsdata
+  #     restoreKeys: | 
+  #       ccache | "$(Agent.OS)"
+  #     cacheHitVar: CCACHE_RESTORED
 
   - script: |
 
       # https://github.com/ccache/ccache/wiki/File-storage
       export CCACHE_REMOTE_STORAGE=file:///nfsdata
       export CCACHE_REMOTE_ONLY=true
-      cmake -B build -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-      cmake --build ./build
+      # cmake -B build -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+      # cmake --build ./build
       # conan profile detect     
       # conan install . --output-folder=build --build=missing
       
       # # cmake -B build -G Ninja
-      # cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-      # cmake --build ./build
+      cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+      cmake --build ./build
     displayName: 'Run cmake'
 
 
