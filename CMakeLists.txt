@@ -1,16 +1,13 @@
-cmake_minimum_required(VERSION 3.16)
-
+cmake_minimum_required(VERSION 3.15)
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
     # Support Unix Makefiles and Ninja
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
+project(compressor C)
 
-project(main)
+find_package(ZLIB REQUIRED)
 
-add_executable(main main.cpp)
+add_executable(${PROJECT_NAME} src/main.c)
 
-install(TARGETS main)
-
-enable_testing()
-add_test(NAME main COMMAND main)
+target_link_libraries(${PROJECT_NAME} ZLIB::ZLIB)

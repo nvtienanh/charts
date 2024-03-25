@@ -1,0 +1,39 @@
+# Common configurations
+
+read-only: false
+allow-other: true
+nonempty: false
+logging:
+  type: syslog
+  level: log_debug
+
+components:
+  - libfuse
+  - block_cache
+  - attr_cache
+  - azstorage
+
+libfuse:
+  default-permission: 0777
+  attribute-expiration-sec: 120
+  entry-expiration-sec: 120
+  negative-entry-expiration-sec: 240
+
+block_cache:
+  block-size-mb: 32
+  mem-size-mb: 4096
+  prefetch: 80
+  parallelism: 128
+
+attr_cache:
+  timeout-sec: 7200
+
+azstorage:
+  type: block
+  disable-compression: true
+  virtual-directory: false
+  account-name: nvtienanhtestcache
+  account-key: 
+  endpoint: https://nvtienanhtestcache.blob.core.windows.net
+  mode: key
+  container: blobfuse2

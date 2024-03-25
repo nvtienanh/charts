@@ -1,37 +1,11 @@
-FROM debian:bookworm-slim
-LABEL maintainer="melroy@melroy.org"
+FROM ubuntu:20.04
 
-ENV DEBIAN_FRONTEND noninteractive
-
-# APT Update
-RUN apt-get --allow-releaseinfo-change update
-RUN apt-get update && apt-get upgrade -y
-
-# APT install (base) packages
-RUN apt-get install -y build-essential cmake libboost-all-dev pkg-config
-RUN apt-get install -y ninja-build ccache
-RUN apt-get install -y --no-install-recommends curl wget
-
-# Get cppcheck dependencies from stable; that's good enough
-RUN echo "deb-src http://deb.debian.org/debian bookworm main" >>/etc/apt/sources.list
+# Prepare build environment
 RUN apt-get update
-
-# APT install additional packages
-RUN apt-get install -y --no-install-recommends \
-    locales \
-    python3-pip \
-    ca-certificates \
-    clang-format \
-    libssl-dev && \
-    apt-get clean
-
-RUN wget -O azcopy_v10.tar.gz https://aka.ms/downloadazcopy-v10-linux && tar -xf azcopy_v10.tar.gz --strip-components=1 && cp ./azcopy /usr/local/bin &&  chmod +x /usr/local/bin/azcopy
-# Clean-up
-RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-# set the locale to en_US.UTF-8
-RUN echo "en_US.UTF-8 UTF-8" >/etc/locale.gen && \
-    locale-gen en_US.UTF-8 && \
-    dpkg-reconfigure locales && \
-    update-locale LANG=en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
+RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install tzdata
+RUN apt-get -qq -y install gcc g++ \
+    cmake curl wget pkg-config \
+    libtool
+RUN apt-get -qq -y install python3
+RUN apt-get -qq -y install python3-pip
+RUN pip3 install conan
