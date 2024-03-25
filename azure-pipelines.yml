@@ -14,14 +14,12 @@ jobs:
   container:
     image: nvtienanh/cmake:5.0
     volumes:
-      - /temcache:/temcache
-      - /sofacache:/sofacache
-      - /nfsdata:/nfsdata
+      - /temp-cache:/temp-cache
   variables:
-    CCACHE_DIR: /sofacache
+    CCACHE_DIR: /temp-cache
   steps:
   - script: |
-      ls -la /sofacache
+      ls -la /temp-cache
   - task: Cache@2
     displayName: Ccache caching
     inputs:
@@ -36,7 +34,7 @@ jobs:
       cmake --build ./build
     displayName: 'Run cmake'
   - script: |
-      ls -la /sofacache
+      ls -la /temp-cache
 
 
 # - job: checkout
