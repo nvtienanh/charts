@@ -17,7 +17,7 @@ jobs:
       - /nfsdata:/nfsdata
       - /conan:/conan
   variables:
-    CCACHE_DIR: /nfsdata
+    # CCACHE_DIR: /nfsdata
     CONAN_USER_HOME: /conan
 
     # CCACHE_HARDLINK: true
@@ -36,14 +36,15 @@ jobs:
     displayName: Ccache caching
     inputs:
       key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
-      path: $(CCACHE_DIR)
+      path: /nfsdata
       restoreKeys: | 
         ccache | "$(Agent.OS)"
       cacheHitVar: CCACHE_RESTORED
 
   - script: |
 
-      export CCACHE_NOHARDLINK=true
+      # https://github.com/ccache/ccache/wiki/File-storage
+      export CCACHE_REMOTE_STORAGE=file:///nfsdata
       cmake -B build -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
       cmake --build ./build
       # conan profile detect     
