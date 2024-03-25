@@ -21,19 +21,28 @@ jobs:
     CONAN_USER_HOME: /conan
   steps:
   - task: Cache@2
+    displayName: Conan caching
+    inputs:
+      key: 'conan | "$(Agent.OS)" | conan.lock'
+      path: $(CONAN_USER_HOME)
+      restoreKeys: | 
+        conan | "$(Agent.OS)"
+        conan
+      cacheHitVar: CONAN_CACHE_RESTORED
+
+  - task: Cache@2
     displayName: Ccache caching
     inputs:
       key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
       path: $(CCACHE_DIR)
       restoreKeys: | 
         ccache | "$(Agent.OS)"
-      cacheHitVar: CACHE_RESTORED
+      cacheHitVar: CCACHE_RESTORED
 
   - script: |
       conan profile detect
       conan install . --output-folder=build --build=missing
       conan lock create conanfile.py
-      ls
       # cmake -B build -G Ninja
       cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
       cmake --build ./build
