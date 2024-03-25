@@ -43,7 +43,8 @@ jobs:
 
   - script: |
 
-      df -h
+      whoami
+      echo $UID
       # https://github.com/ccache/ccache/wiki/File-storage
       export CCACHE_REMOTE_STORAGE=file:///nfsdata
       export CCACHE_RESHARE=true
@@ -53,7 +54,7 @@ jobs:
       conan install . --output-folder=build --build=missing
       
       # # cmake -B build -G Ninja
-      cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCCACHE_REMOTE_STORAGE=file:///nfsdata
+      cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
       cmake --build ./build
     displayName: 'Run cmake'
 
