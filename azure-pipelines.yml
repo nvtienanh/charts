@@ -30,6 +30,7 @@ jobs:
       cacheHitVar: CACHE_RESTORED
 
   - script: |
+      conan profile detect
       conan install . --output-folder=build --build=missing
       cmake -B build -G Ninja
       cmake --build ./build
