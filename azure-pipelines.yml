@@ -51,7 +51,6 @@ jobs:
       echo $UID
       conan profile new default --detect
       conan profile update settings.compiler.libcxx=libstdc++11 default
-      conan config set storage.path=/conan
       conan install . --output-folder=build --build=missing
       
       # # cmake -B build -G Ninja
