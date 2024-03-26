@@ -51,7 +51,7 @@ jobs:
       conan install . --output-folder=build --build=missing
       
       # # cmake -B build -G Ninja
-      cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
+      cmake -B build -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
       cmake --build ./build
     displayName: 'Run cmake'
     env:
