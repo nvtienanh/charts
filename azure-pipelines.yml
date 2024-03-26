@@ -51,6 +51,8 @@ jobs:
       echo $UID
       conan profile new default --detect
       conan profile update settings.compiler.libcxx=libstdc++11 default
+      conan config get storage.path
+      echo $(Pipeline.Workspace)/.conan/data
       conan install . --output-folder=build --build=missing
       
       # # cmake -B build -G Ninja
@@ -67,7 +69,9 @@ jobs:
       CCACHE_DIR: /nfsdata
   
   - script: |
-      tar -czf /conan/conan-data.tar.gz $(Pipeline.Workspace)/.conan/data
+      mkdir -p temp
+      tar -czf temp/conan-data.tar.gz $(Pipeline.Workspace)/.conan/data
+      cp temp/conan-data.tar.gz /conan/
     displayName: Pack conan cache
     condition: and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true'))
 
