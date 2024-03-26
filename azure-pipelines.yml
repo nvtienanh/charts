@@ -42,7 +42,7 @@ jobs:
       cacheHitVar: CCACHE_RESTORED
 
   - script: |
-
+      df -h
       whoami
       echo $UID
       conan profile new default --detect
