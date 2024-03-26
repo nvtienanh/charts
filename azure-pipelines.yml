@@ -55,7 +55,7 @@ jobs:
       conan install . --output-folder=build --build=missing
       
       # # cmake -B build -G Ninja
-      cmake -B build -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache
+      cmake -B build -G Ninja
       cmake --build ./build
     displayName: 'Run cmake'
     env:
