@@ -42,6 +42,11 @@ jobs:
       cacheHitVar: CCACHE_RESTORED
 
   - script: |
+      tar -xzf /conan/conan-data.tar.gz -C /
+    displayName: Conan cache restore
+    condition: and(not(canceled()), eq(variables.CONAN_CACHE_RESTORED, 'true'))
+
+  - script: |
       df -h
       whoami
       echo $UID
@@ -51,21 +56,25 @@ jobs:
       conan install . --output-folder=build --build=missing
       
       # # cmake -B build -G Ninja
-      cmake -B build -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+      cmake -B build -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache
       cmake --build ./build
     displayName: 'Run cmake'
     env:
       CCACHE_DIR: /nfsdata
 
   - script: |
-
       ccache -s
     displayName: 'Run ccache -s'
     env:
       CCACHE_DIR: /nfsdata
+  
+  - script: |
+      tar -czf /conan/conan-data.tar.gz $(Pipeline.Workspace)/.conan/data
+    displayName: Pack conan cache
+    condition: and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true'))
 
 
-
+# https://github.com/microsoft/azure-pipelines-tasks/issues/10925
 # - job: checkout
 #   dependsOn: no_checkout
 
