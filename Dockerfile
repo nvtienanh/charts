@@ -8,4 +8,4 @@ RUN apt-get -qq -y install gcc g++ \
     libtool ninja-build 
 RUN apt-get -qq -y install python3
 RUN apt-get -qq -y install python3-pip
-RUN pip3 install conan
+RUN pip3 install conan==1.63.0

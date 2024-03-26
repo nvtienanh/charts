@@ -16,47 +16,45 @@ jobs:
     volumes:
       - /nfsdata:/nfsdata
       - /conan:/conan
-  variables:
-    # CCACHE_DIR: /nfsdata
-    CONAN_USER_HOME: /conan
+  # variables:
+  #   # CCACHE_DIR: /nfsdata
+  #   CONAN_USER_HOME: /conan
 
     # CCACHE_HARDLINK: true
   steps:
   - task: Cache@2
     displayName: Conan caching
     inputs:
-      key: 'conan | "$(Agent.OS)" | **/conanfile.py'
-      path: $(CONAN_USER_HOME)
+      key: 'conan | "$(Agent.OS)" | conanfile.py'
+      path: /conan
       restoreKeys: | 
         conan | "$(Agent.OS)"
         conan
       cacheHitVar: CONAN_CACHE_RESTORED
 
-  # - task: Cache@2
-  #   displayName: Ccache caching
-  #   inputs:
-  #     key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
-  #     path: /nfsdata
-  #     restoreKeys: | 
-  #       ccache | "$(Agent.OS)"
-  #     cacheHitVar: CCACHE_RESTORED
+  - task: Cache@2
+    displayName: Ccache caching
+    inputs:
+      key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
+      path: /nfsdata
+      restoreKeys: | 
+        ccache | "$(Agent.OS)"
+      cacheHitVar: CCACHE_RESTORED
 
   - script: |
 
       whoami
       echo $UID
-      # https://github.com/ccache/ccache/wiki/File-storage
-      export CCACHE_REMOTE_STORAGE=file:///nfsdata
-      export CCACHE_RESHARE=true
-      # cmake -B build -G Ninja -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-      # cmake --build ./build
-      conan profile detect
+      conan profile new default --detect
+      conan config set storage.path=/conan
       conan install . --output-folder=build --build=missing
       
       # # cmake -B build -G Ninja
       cmake -B build -G Ninja -DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
       cmake --build ./build
     displayName: 'Run cmake'
+    env:
+      CCACHE_DIR: /nfsdata
 
 
 
