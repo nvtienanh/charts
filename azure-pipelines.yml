@@ -25,7 +25,7 @@ jobs:
   - task: Cache@2
     displayName: Conan caching
     inputs:
-      key: 'v2 | conan | "$(Agent.OS)" | conanfile.py'
+      key: 'v2f | conan | "$(Agent.OS)" | conanfile.py'
       path: /conan
       restoreKeys: | 
         v2 | conan | "$(Agent.OS)"
