@@ -70,7 +70,7 @@ jobs:
   
   - script: |
       mkdir -p temp
-      tar -czf temp/conan-data.tar.gz $(System.DefaultWorkingDirectory)/.conan/data
+      tar -czf temp/conan-data.tar.gz /home/azureuser_azpcontainer/.conan/data
       cp temp/conan-data.tar.gz /conan/
     displayName: Pack conan cache
     condition: and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true'))
