@@ -25,10 +25,10 @@ jobs:
   - task: Cache@2
     displayName: Conan caching
     inputs:
-      key: 'blob | conan | "$(Agent.OS)" | conanfile.py'
+      key: 'blobstorage | conan | "$(Agent.OS)" | conanfile.py'
       path: $(Pipeline.Workspace)/s/.cache/conan
       restoreKeys: | 
-        blob | conan | "$(Agent.OS)"
+        blobstorage | conan | "$(Agent.OS)"
       cacheHitVar: CONAN_CACHE_RESTORED
 
   # - task: Cache@2
@@ -58,17 +58,14 @@ jobs:
     condition: and(not(canceled()), eq(variables.CONAN_CACHE_RESTORED, 'true'))
 
   - script: |
-      echo $(cache_file)
       df -h
       whoami
       echo $UID
       conan profile new default --detect
       conan profile update settings.compiler.libcxx=libstdc++11 default
-      conan config get storage.path
-      echo $(System.DefaultWorkingDirectory)/.conan/data
+      
       conan install . --output-folder=build --build=missing
       conan lock create conanfile.py
-      ls
       # # cmake -B build -G Ninja
       # cmake -B build -G Ninja
       # cmake --build ./build
@@ -83,8 +80,8 @@ jobs:
   #     CCACHE_DIR: /nfsdata
   
   - script: |
-      cp $(Pipeline.Workspace)/s/.cache/conan/conan.lock /home/azureuser_azpcontainer/.conan/data
-      tar -czf $(cache_file) /home/azureuser_azpcontainer/.conan/data
+      cp $(Pipeline.Workspace)/s/.cache/conan/conan.lock $(conan config get storage.path)
+      tar -czf $(cache_file) $(conan config get storage.path)
 
     displayName: Pack conan cache
     condition: and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true'))
