@@ -49,16 +49,16 @@ jobs:
       if test -f $cache_file; then
         echo "File exists."
         tar -xzf $cache_file -C /
+        cp /home/azureuser_azpcontainer/.conan/data/conan.lock $(Pipeline.Workspace)/s/
       else
         echo "File not exists."
       fi
-      echo "##vso[task.setvariable variable=cache_file;]$(echo $cache_file)"
+      # echo "##vso[task.setvariable variable=cache_file;]$(echo $cache_file)"
 
     displayName: Conan cache restore
     condition: and(not(canceled()), eq(variables.CONAN_CACHE_RESTORED, 'true'))
 
   - script: |
-      echo "$(cache_file)"
       conan profile new default --detect
       conan profile update settings.compiler.libcxx=libstdc++11 default
       
@@ -78,6 +78,11 @@ jobs:
   #     CCACHE_DIR: /nfsdata
   
   - script: |
+      SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
+      md5=($(md5sum $(Pipeline.Workspace)/s/conan.lock))
+      cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch/$md5.tar.gz"
+      echo $cache_file
+
       cp $(Pipeline.Workspace)/s/.cache/conan/conan.lock $(conan config get storage.path)
       tar -czf "$(cache_file)" $(conan config get storage.path)
 
