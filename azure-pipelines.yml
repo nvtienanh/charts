@@ -43,13 +43,11 @@ jobs:
   - script: |
 
       SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
-      md5=($(md5sum $(Pipeline.Workspace)/s/.cache/conan/conan.lock))
-      cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch/$md5.tar.gz"
+      cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch.tar.gz"
       echo $cache_file
       if test -f $cache_file; then
-        echo "File exists."
+        echo "Cach File exists."
         tar -xzf $cache_file -C /
-        cp /home/azureuser_azpcontainer/.conan/data/conan.lock $(Pipeline.Workspace)/s/
       else
         echo "File not exists."
       fi
@@ -79,11 +77,12 @@ jobs:
   
   - script: |
       SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
-      md5=($(md5sum $(Pipeline.Workspace)/s/conan.lock))
-      mkdir -p /conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch
-      cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch/$md5.tar.gz"
-      
-      cp $(Pipeline.Workspace)/s/.cache/conan/conan.lock $(conan config get storage.path)
+      mkdir -p /conan/$(System.TeamProjectId)/$(System.DefinitionId)
+      cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch.tar.gz"
+      if test -f $cache_file; then
+        echo "Old Cache File exists."
+        rm $cache_file
+      fi
       tar -czf $cache_file $(conan config get storage.path)
 
     displayName: Pack conan cache
