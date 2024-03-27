@@ -49,7 +49,15 @@ jobs:
       md5=($(md5sum conanfile.py))
       echo $md5
       echo $(Build.SourceVersion)
-      # tar -xzf /conan/conan-data.tar.gz -C /
+      cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch/$md5.tar.gz"
+      echo $cache_file
+      if test -f $cache_file; then
+        echo "File exists."
+        # tar -xzf /conan/conan-data.tar.gz -C /
+      else
+        echo "File not exists."
+      fi
+
     displayName: Conan cache restore
     condition: and(not(canceled()), eq(variables.CONAN_CACHE_RESTORED, 'true'))
 
