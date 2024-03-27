@@ -70,7 +70,8 @@ jobs:
       conan config get storage.path
       echo $(System.DefaultWorkingDirectory)/.conan/data
       conan install . --output-folder=build --build=missing
-      
+      conan lock create
+      ls
       # # cmake -B build -G Ninja
       # cmake -B build -G Ninja
       # cmake --build ./build
