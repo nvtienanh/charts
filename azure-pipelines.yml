@@ -84,7 +84,7 @@ jobs:
       echo $cache_file
 
       cp $(Pipeline.Workspace)/s/.cache/conan/conan.lock $(conan config get storage.path)
-      tar -czf "$(cache_file)" $(conan config get storage.path)
+      tar -czf $cache_file $(conan config get storage.path)
 
     displayName: Pack conan cache
     condition: and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true'))
