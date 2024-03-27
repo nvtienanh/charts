@@ -42,10 +42,13 @@ jobs:
 
   - script: |
 
-      sed 's/\//_/g' <<<"$(Build.SourceBranch)"
+      SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
+      echo $SourceBranch
       echo $(System.TeamProjectId)
       echo $(System.DefinitionId)
-      sha256sum conanfile.py
+      md5=($(md5sum conanfile.py))
+      echo $md5
+      echo $(Build.SourceVersion)
       # tar -xzf /conan/conan-data.tar.gz -C /
     displayName: Conan cache restore
     condition: and(not(canceled()), eq(variables.CONAN_CACHE_RESTORED, 'true'))
