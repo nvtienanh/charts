@@ -52,13 +52,13 @@ jobs:
       else
         echo "File not exists."
       fi
-      echo "##vso[task.setvariable variable=cache_file]${cache_file}"
+      echo "##vso[task.setvariable variable=cache_file;]${cache_file}"
 
     displayName: Conan cache restore
     condition: and(not(canceled()), eq(variables.CONAN_CACHE_RESTORED, 'true'))
 
   - script: |
-      echo $cache_file
+      echo "$(cache_file)"
       conan profile new default --detect
       conan profile update settings.compiler.libcxx=libstdc++11 default
       
@@ -79,7 +79,7 @@ jobs:
   
   - script: |
       cp $(Pipeline.Workspace)/s/.cache/conan/conan.lock $(conan config get storage.path)
-      tar -czf $cache_file $(conan config get storage.path)
+      tar -czf "$(cache_file)" $(conan config get storage.path)
 
     displayName: Pack conan cache
     condition: and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true'))
