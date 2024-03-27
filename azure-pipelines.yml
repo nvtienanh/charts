@@ -43,7 +43,7 @@ jobs:
   - script: |
 
       SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
-      md5=($(md5sum (Pipeline.Workspace)/s/.cache/conan/conan.lock))
+      md5=($(md5sum $(Pipeline.Workspace)/s/.cache/conan/conan.lock))
       cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch/$md5.tar.gz"
       echo $cache_file
       if test -f $cache_file; then
@@ -83,9 +83,9 @@ jobs:
   #     CCACHE_DIR: /nfsdata
   
   - script: |
-      mkdir -p temp
-      # tar -czf temp/conan-data.tar.gz /home/azureuser_azpcontainer/.conan/data
-      # cp temp/conan-data.tar.gz /conan/
+      cp $(Pipeline.Workspace)/s/.cache/conan/conan.lock /home/azureuser_azpcontainer/.conan/data
+      tar -czf $(cache_file) /home/azureuser_azpcontainer/.conan/data
+
     displayName: Pack conan cache
     condition: and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true'))
 
