@@ -50,8 +50,8 @@ jobs:
         tar -xzf $cache_file -C /
       else
         echo "File not exists."
-      fi
-      # echo "##vso[task.setvariable variable=cache_file;]$(echo $cache_file)"
+        echo "##vso[task.setvariable variable=cache_notfound;]true"
+      fi      
 
     displayName: Conan cache restore
     condition: and(not(canceled()), eq(variables.CONAN_CACHE_RESTORED, 'true'))
@@ -69,11 +69,10 @@ jobs:
     env:
       CCACHE_DIR: /nfsdata
 
-  # - script: |
-  #     ccache -s
-  #   displayName: 'Run ccache -s'
-  #   env:
-  #     CCACHE_DIR: /nfsdata
+  - script: |
+      ccache -s
+    displayName: 'Run ccache -s'
+    condition: eq(cache_notfound, 'true')
   
   - script: |
       SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
@@ -86,7 +85,7 @@ jobs:
       tar -czf $cache_file $(conan config get storage.path)
 
     displayName: Pack conan cache
-    condition: and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true'))
+    condition: or(and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true')), eq(cache_notfound, 'true'))
 
 
 # https://github.com/microsoft/azure-pipelines-tasks/issues/10925
