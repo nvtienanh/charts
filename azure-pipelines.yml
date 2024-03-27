@@ -73,6 +73,7 @@ jobs:
       ccache -s
     displayName: 'Run ccache -s'
     condition: eq(variables.cache_notfound, 'true')
+
   
   - script: |
       SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
@@ -85,7 +86,7 @@ jobs:
       tar -czf $cache_file $(conan config get storage.path)
 
     displayName: Pack conan cache
-    condition: or(and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true')), eq(cache_notfound, 'true'))
+    condition: or(and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true')), eq(variables.cache_notfound, 'true'))
 
 
 # https://github.com/microsoft/azure-pipelines-tasks/issues/10925
