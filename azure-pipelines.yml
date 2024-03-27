@@ -25,23 +25,27 @@ jobs:
   - task: Cache@2
     displayName: Conan caching
     inputs:
-      key: 'v2f | conan | "$(Agent.OS)" | conanfile.py'
-      path: /conan
+      key: 'blob | conan | "$(Agent.OS)" | conanfile.py'
+      path: $(Pipeline.Workspace)/s/.cache/conan
       restoreKeys: | 
-        v2 | conan | "$(Agent.OS)"
+        blob | conan | "$(Agent.OS)"
       cacheHitVar: CONAN_CACHE_RESTORED
 
-  - task: Cache@2
-    displayName: Ccache caching
-    inputs:
-      key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
-      path: /nfsdata
-      restoreKeys: | 
-        ccache | "$(Agent.OS)"
-      cacheHitVar: CCACHE_RESTORED
+  # - task: Cache@2
+  #   displayName: Ccache caching
+  #   inputs:
+  #     key: 'ccache | "$(Agent.OS)" | $(Build.SourceVersion)'
+  #     path: /nfsdata
+  #     restoreKeys: | 
+  #       ccache | "$(Agent.OS)"
+  #     cacheHitVar: CCACHE_RESTORED
 
   - script: |
-      tar -xzf /conan/conan-data.tar.gz -C /
+      echo $(Build.SourceBranch)
+      echo $(System.TeamProjectId)
+      echo $(System.DefinitionId)
+      sha256sum conanfile.py
+      # tar -xzf /conan/conan-data.tar.gz -C /
     displayName: Conan cache restore
     condition: and(not(canceled()), eq(variables.CONAN_CACHE_RESTORED, 'true'))
 
@@ -56,22 +60,22 @@ jobs:
       conan install . --output-folder=build --build=missing
       
       # # cmake -B build -G Ninja
-      cmake -B build -G Ninja
-      cmake --build ./build
+      # cmake -B build -G Ninja
+      # cmake --build ./build
     displayName: 'Run cmake'
     env:
       CCACHE_DIR: /nfsdata
 
-  - script: |
-      ccache -s
-    displayName: 'Run ccache -s'
-    env:
-      CCACHE_DIR: /nfsdata
+  # - script: |
+  #     ccache -s
+  #   displayName: 'Run ccache -s'
+  #   env:
+  #     CCACHE_DIR: /nfsdata
   
   - script: |
       mkdir -p temp
-      tar -czf temp/conan-data.tar.gz /home/azureuser_azpcontainer/.conan/data
-      cp temp/conan-data.tar.gz /conan/
+      # tar -czf temp/conan-data.tar.gz /home/azureuser_azpcontainer/.conan/data
+      # cp temp/conan-data.tar.gz /conan/
     displayName: Pack conan cache
     condition: and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true'))
 
