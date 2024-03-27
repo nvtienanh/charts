@@ -41,7 +41,8 @@ jobs:
   #     cacheHitVar: CCACHE_RESTORED
 
   - script: |
-      echo $(Build.SourceBranch)
+
+      sed 's/\//_/g' <<<"$(Build.SourceBranch)"
       echo $(System.TeamProjectId)
       echo $(System.DefinitionId)
       sha256sum conanfile.py
