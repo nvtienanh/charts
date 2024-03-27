@@ -72,7 +72,7 @@ jobs:
   - script: |
       ccache -s
     displayName: 'Run ccache -s'
-    condition: eq(cache_notfound, 'true')
+    condition: eq(variables.cache_notfound, 'true')
   
   - script: |
       SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
