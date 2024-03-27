@@ -69,10 +69,9 @@ jobs:
     env:
       CCACHE_DIR: /nfsdata
 
-  - script: |
-      ccache -s
-    displayName: 'Run ccache -s'
-    condition: eq(variables.cache_notfound, 'true')
+  # - script: |
+  #     ccache -s
+  #   displayName: 'Run ccache -s'
 
   
   - script: |
