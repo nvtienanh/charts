@@ -39,22 +39,35 @@ jobs:
   #     restoreKeys: | 
   #       ccache | "$(Agent.OS)"
   #     cacheHitVar: CCACHE_RESTORED
-
   - script: |
 
       SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
-      cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch.tar.gz"
-      echo $cache_file
-      if test -f $cache_file; then
+      blob_cache="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch.tar.gz"
+      if test -f $blob_cache; then
         echo "Cach File exists."
-        tar -xzf $cache_file -C /
+        tar -xzf $blob_cache -C /
+        echo "##vso[task.setvariable variable=cache_notfound;]false"
       else
         echo "File not exists."
         echo "##vso[task.setvariable variable=cache_notfound;]true"
-      fi      
+      fi
+      echo "##vso[task.setvariable variable=blob_cache;]$blob_cache"
+    displayName: Get cache on blobstorage
 
-    displayName: Conan cache restore
-    condition: and(not(canceled()), eq(variables.CONAN_CACHE_RESTORED, 'true'))
+  # - script: |
+
+  #     echo $(variables.cache_notfound)
+  #     echo $(blob_cache)
+  #     if test -f $blob_cache; then
+  #       echo "Cach File exists."
+  #       tar -xzf $blob_cache -C /
+  #     else
+  #       echo "File not exists."
+  #       echo "##vso[task.setvariable variable=cache_notfound;]true"
+  #     fi
+
+  #   displayName: Conan cache restore
+  #   condition: and(not(canceled()), eq(variables.CONAN_CACHE_RESTORED, 'true'))
 
   - script: |
       conan profile new default --detect
@@ -75,14 +88,14 @@ jobs:
 
   
   - script: |
-      SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
-      mkdir -p /conan/$(System.TeamProjectId)/$(System.DefinitionId)
-      cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch.tar.gz"
-      if test -f $cache_file; then
+      # SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
+      # mkdir -p /conan/$(System.TeamProjectId)/$(System.DefinitionId)
+      # cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch.tar.gz"
+      if test -f $blob_cache; then
         echo "Old Cache File exists."
-        rm $cache_file
+        rm $blob_cache
       fi
-      tar -czf $cache_file $(conan config get storage.path)
+      tar -czf $blob_cache $(conan config get storage.path)
 
     displayName: Pack conan cache
     condition: or(and(not(canceled()), not(failed()), ne(variables.CONAN_CACHE_RESTORED, 'true')), eq(variables.cache_notfound, 'true'))
