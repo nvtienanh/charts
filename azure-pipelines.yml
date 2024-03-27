@@ -80,9 +80,9 @@ jobs:
   - script: |
       SourceBranch=$(sed 's/\//_/g' <<<"$(Build.SourceBranch)")
       md5=($(md5sum $(Pipeline.Workspace)/s/conan.lock))
+      mkdir -p /conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch
       cache_file="/conan/$(System.TeamProjectId)/$(System.DefinitionId)/$SourceBranch/$md5.tar.gz"
-      echo $cache_file
-
+      
       cp $(Pipeline.Workspace)/s/.cache/conan/conan.lock $(conan config get storage.path)
       tar -czf $cache_file $(conan config get storage.path)
 
